@@ -4,10 +4,7 @@ def read_input(file):
         return arr
 
 
-arr = read_input("day_1_input.txt")
-
-
-def solution_a(arr):
+def solution_1(arr):
     cur = arr.pop(0)
     increases = 0
     for elem in arr:
@@ -17,7 +14,7 @@ def solution_a(arr):
     return increases
 
 
-def solution_b(arr):
+def solution_2(arr):
     sw = arr[:3]
     increases = 0
     for i, elem in enumerate(arr[3:]):

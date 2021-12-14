@@ -33,9 +33,11 @@ class Board:
                     return i, j
         return -1, -1
 
-def read_input(file, draws, boards):
+
+def read_input(file):
+    boards = list()
     with open(file, "r") as f:
-        draws += [int(i) for i in f.readline().strip().split(',')]
+        draws = [int(i) for i in f.readline().strip().split(',')]
         board = list()
         for i, line in enumerate(f.readlines()):
             if i % 6 == 0:
@@ -44,13 +46,10 @@ def read_input(file, draws, boards):
             else:
                 board.append([int(i) for i in line.strip().split()])
         boards.pop(0)
+    return draws, boards
 
 
-draws, boards = list(), list()
-read_input("day_4_input.txt", draws, boards)
-
-
-def solution_a(draws, boards):
+def solution_1(draws, boards):
     board_objects = [Board(_) for _ in boards]
     for draw in draws:
         for board in board_objects:
@@ -58,7 +57,8 @@ def solution_a(draws, boards):
                 return board.score()
     return -1
 
-def solution_b(draws, boards):
+
+def solution_2(draws, boards):
     board_objects = [Board(_) for _ in boards]
     win_index = 0
     for draw in draws:
@@ -67,6 +67,3 @@ def solution_b(draws, boards):
                 board.win_index = win_index
                 win_index += 1
     return max(board_objects, key=lambda x: x.win_index).score
-
-
-print(solution_b(draws, boards))

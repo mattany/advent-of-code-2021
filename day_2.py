@@ -1,9 +1,7 @@
 import util
 
-arr = util.read_input("day_2_input.txt")
 
-
-def solution_a(arr):
+def solution_1(arr):
     dirs = [0, 0]
     vertical, horizontal = 0, 1
     for elem in arr:
@@ -27,10 +25,10 @@ def solution_a(arr):
 
         funcs[direction]()
 
-    return dirs[0]*dirs[1]
+    return dirs[0] * dirs[1]
 
 
-def solution_b(arr):
+def solution_2(arr):
     dirs = [0, 0, 0]
     vertical, horizontal, aim = 0, 1, 2
     for elem in arr:
@@ -55,7 +53,4 @@ def solution_b(arr):
 
         funcs[direction]()
 
-    return dirs[vertical]*dirs[horizontal]
-
-
-solution_b(arr)
+    return dirs[vertical] * dirs[horizontal]

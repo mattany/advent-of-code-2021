@@ -1,11 +1,18 @@
+import copy
+from collections import defaultdict
+from timeit import default_timer as timer
+from datetime import timedelta
+
+
 class Rule:
     def __init__(self, state, res):
-        self.left = state[0]
-        self.right = state[1]
-        self.res = res
+        self.l = state[0]
+        self.r = state[1]
+        self.m = res
+        self.stage = 1
 
     def __repr__(self):
-        return f"{self.left}{self.right} -> {self.res}"
+        return f"{self.l}{self.r} -> {self.m}"
 
 
 def read_input(file):
@@ -15,34 +22,26 @@ def read_input(file):
         rules = {line.strip().split(" -> ")[0]: Rule(*(line.strip().split(" -> "))) for line in f.readlines()}
         return state, rules
 
-
-def apply_rules(rules, state):
-    new_letters = ["" for _ in range(len(state) - 1)]
-    for i, letter in enumerate(state[:-1]):
-        if f"{letter}{state[i + 1]}" in rules:
-            new_letters[i] = rules[f"{letter}{state[i + 1]}"].res
-    new_state = []
-    for i in range(len(state) - 1):
-        new_state.append(state[i])
-        new_state.append(new_letters[i])
-    new_state.append(state[-1])
-    return "".join(new_state)
-
-
 def solution_1(state, rules, iterations=10):
+    pairs = defaultdict(lambda: 0)
+    chars = defaultdict(lambda: 0)
+
+    for i, c in enumerate(state[:-1]):
+        pairs[f"{c}{state[i + 1]}"] += 1
+        chars[c] += 1
+    chars[state[-1]] += 1
+
     for i in range(iterations):
-        print(i)
-        state = apply_rules(rules, state)
-    counts = dict()
-    while state:
-        letter = state[0]
-        counts[letter] = state.count(letter)
-        state = state.replace(letter, "")
-    max_val, min_val = max(counts.values()), min(counts.values())
-    return max_val - min_val
+        new_pairs = defaultdict(lambda: 0)
+        for p in pairs.keys():
+            print(len(pairs), p, pairs[p])
+            np_1, np_2 = f"{rules[p].l}{rules[p].m}", f"{rules[p].m}{rules[p].r}"
+            new_pairs[np_1] += pairs[p]
+            new_pairs[np_2] += pairs[p]
+            chars[rules[p].m] += pairs[p]
+        pairs = copy.deepcopy(new_pairs)
+    print(chars)
+    return max(chars.values()) - min(chars.values())
 
 
-def solution_2(state, rules):
-    return solution_1(state, rules, iterations=40)
-
-print(solution_2(*read_input("day_14_input.txt")))
+print(solution_1(*read_input("day_14_input.txt"), 40))
